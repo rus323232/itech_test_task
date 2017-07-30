@@ -1,0 +1,45 @@
+$textColor: #000000
+$sliderColor: #cccccc
+$sliderTextColor: #717171
+
+.screen-2
+  height: 100vh
+
+  .screen-2__content
+    position: absolute
+    margin-top: -199px
+    padding: 0 50px 0 50px
+    top: 50%
+    width: 100%
+
+    .screen-2__title
+      border-bottom: 1px black solid
+      margin-bottom:  40px
+
+      h1
+        font-size: 36pt
+        color: $textColor
+        font-weight: normal
+
+    .screen-2__slider
+      display: inline-block
+
+      .screen-2__slider-item:first-child
+        margin-left: 0px
+
+      .screen-2__slider-item
+        display: inline-block
+        border: 1px solid $sliderColor
+        width: 230px
+        height: 300px
+        margin-left: 55px
+
+        img
+          width: 100%
+          height: 145px
+
+        figcaption
+          width: 100%
+          padding: 20px 10px 20px 10px
+          color: $sliderTextColor
+          font-size: 12pt
