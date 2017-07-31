@@ -74,4 +74,37 @@ $textColor: #ffffff
         display: inline-block
         font-size: 24pt
 
+.pagination
+  position: absolute
+  top: 50vh
+  right: 20px
+  height: 40px
+
+  ul
+    list-style: none
+    padding: 0
+    margin: 0
+
+    li:last-child
+      margin-bottom: 0
+
+    li
+      width: 10px
+      height: 10px
+      margin-bottom: 10px
+      cursor: pointer
+
+      a
+        display: block
+        background-color: $pagination-color
+        width: 100%
+        height: 100%
+        border-radius: 10px
+
+      a:hover
+        transform: scale(1.3)
+
+    li.active
+      a
+        transform: scale(1.3)
 
