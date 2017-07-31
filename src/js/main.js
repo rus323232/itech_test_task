@@ -1,23 +1,25 @@
 "use strict";
 
 (($) => {
-    $('.fixed-header__button').click(function () {
-        $(this).toggleClass("on");
-        return false;
-    });
 
     class SmoothScroll {
         constructor (settings) {
             this.wrapper = $('.full-page');
             this.screenItem = $('section[id*="page-"]');
-            this.animationTime = settings.animationTime;
-            this.animationDelay = settings.animationDelay;
+            this.animationTime = settings.animationTime || 200;
+            this.animationDelay = settings.animationDelay || 100;
+            this.pageHeight = 0;
+            this.currentPage = 0;
+            this.pageCount = 0;
+            this.lastAnimation = 0;
+
+            this.setPosition('default');
         }
 
         formatPage () {
             let offsetY = 0,
-                paginationCircle  = $('.pagination li'),
-                currentPage = 0;
+                paginationCircle = $('.pagination li');
+
             if (!$('body').hasClass('formatted')) {
                 this.screenItem.each(function () {
                     $(this).css('top', offsetY + "%");
@@ -26,56 +28,139 @@
                 $('body').addClass('formatted');
             }
 
-            currentPage = this.calcCurrentPage();
+            this.calcPageParams();
 
-            if (currentPage) {
+            if (this.currentPage !== undefined) {
                 this.screenItem.removeClass('active');
-                this.screenItem.eq(currentPage).addClass('active');
+                this.screenItem.eq(this.currentPage).addClass('active');
                 paginationCircle.removeClass('active');
-                paginationCircle.eq(currentPage).addClass('active');
+                paginationCircle.eq(this.currentPage).addClass('active');
+                if (this.currentPage === 1 ) {
+                    $('.fixed-header').addClass('fixed-header_black');
+                } else {
+                    $('.fixed-header').removeClass('fixed-header_black');
+                }
+            this.updateUrl(this.currentPage + 1);
+
             }
         }
 
-        calcCurrentPage () {
-            let pageHeight  = this.screenItem.height(),
-                pageCount   = this.wrapper.height() / pageHeight,
-                position    = parseInt($(window).scrollTop());
+        updateUrl (pageNumber) {
+            let currentUrl = location.href.split('#'),
+                newUrl = currentUrl[0] + '#page-' +pageNumber;
+            window.history.pushState(null, null, newUrl);
+            $(window).bind('hashchange', () => {
+                let newPage = location.href.split('#')[1],
+                    newPageNumber = parseInt(newPage.slice(-1));
+                this.goToPage(newPageNumber - 1);
+            })
+        }
 
-            return position /pageHeight;
+        calcPageParams () {
+            let pageHeight  = this.screenItem.height(),
+                pageCount   = this.wrapper.height() / pageHeight;
+
+            this.pageHeight  = parseInt(pageHeight);
+            this.pageCount   = parseInt(pageCount);
         }
 
         scrollInit () {
-            $(document).bind('mousewheel DOMMouseScroll MozMousePixelScroll', event => {
+            $(document).bind('mousewheel DOMMouseScroll', event => {
                 event.preventDefault();
                 let currentTime = new Date().getTime(),
-                    delta = event.originalEvent.wheelDelta || -event.originalEvent.detail,
-                    lastAnimation;
-                if(currentTime - lastAnimation < this.animationDelay + this.animationTime) {
+                    delta = event.originalEvent.wheelDelta || -event.originalEvent.detail;
+
+                if(currentTime - this.lastAnimation < this.animationDelay + this.animationTime) {
                     event.preventDefault();
                     return;
                 }
-                lastAnimation = currentTime;
-                if (delta < 0 ) {
-                    this.scrollDown()
+
+                this.lastAnimation = currentTime;
+
+                console.log(this.currentPage);
+                if (delta < 0) {
+                    if (this.currentPage === (this.pageCount - 1)) {
+                        return;
+                    }
+                    this.goNextPage();
                 }
                 else {
-                    this.scrollUp()
+                    if (this.currentPage !== 0) {
+                        this.goPrevPage();
+                    }
                 }
             });
         }
 
-        scrollUp () {
+        menuInit () {
+            let self = this;
 
+            $('.pagination a, .fixed-header__menu a').bind('click', function (e) {
+                e.preventDefault();
+                let link = $(this).attr('href'),
+                    page = parseInt(link.slice(-1)) - 1;
+                self.goToPage(page);
+            });
         }
 
-        scrollDown () {
+        goPrevPage () {
+            let prevPage = this.currentPage - 1;
 
+            this.setPosition(prevPage);
+            this.currentPage = prevPage;
+            this.formatPage();
+        }
+
+        goNextPage () {
+            let nextPage = this.currentPage + 1;
+
+            this.setPosition(nextPage);
+            this.currentPage = nextPage;
+            this.formatPage();
+        }
+
+        goToPage (pageNumber) {
+            let page = parseInt(pageNumber);
+            if (page > (this.pageCount - 1) && page < 0) {
+                console.log('Page not exist');
+                return;
+            }
+            this.setPosition(page);
+            this.currentPage = page;
+            this.formatPage();
+        }
+
+        setPosition (page) {
+            let position;
+            if (page === 'default') {
+                $(window).scrollTop(0);
+                position = 0;
+            }
+            position = parseInt(page) * this.pageHeight * -1;
+            if (position !== undefined) {
+                this.wrapper.css({
+                    '-webkit-transform': 'translate3d(0px, '+ position + 'px, 0px)',
+                    '-moz-transform': 'translate3d(0px, '+ position + 'px, 0px)',
+                    '-ms-transform': 'translate3d(0px, '+ position + 'px, 0px)',
+                    '-o-transform': 'translate3d(0px, '+ position + 'px, 0px)',
+                    'transform': 'translate3d(0px, '+ position + 'px, 0px)'
+                });
+            }
         }
     }
 
-    let test =  new SmoothScroll();
+    let test =  new SmoothScroll({
+        animationDelay: 500,
+        animationTime: 1000
+    });
     test.formatPage();
     test.scrollInit()
+    test.menuInit();
+
+    $('.fixed-header__button').click(function () {
+        $(this).toggleClass("on");
+        return false;
+    });
 
 
 })(jQuery);
