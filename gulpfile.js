@@ -1,9 +1,10 @@
 "use strict";
 
-let gulp      = require('gulp'),
-    sass      = require('gulp-sass'),
-    babel     = require('gulp-babel'),
-    concat    = require('gulp-concat');
+let gulp       = require('gulp'),
+    sass       = require('gulp-sass'),
+    babel      = require('gulp-babel'),
+    concat     = require('gulp-concat'),
+    browserify = require('gulp-browserify');
 
 gulp.task('sass', () => {
     return gulp.src(['src/sass/app.sass'])
@@ -14,16 +15,17 @@ gulp.task('sass', () => {
 
 gulp.task('js', () => {
     return gulp.src(['src/js/**/*.js'])
-        .pipe(concat('bundle.js'))
         .pipe(babel({
-            presets: [ 'es2015' ]
+            presets: [ 'es2015' ],
+            plugins: ['transform-es2015-modules-commonjs']
         }))
+        .pipe(browserify())
         .pipe(gulp.dest('dist/js'))
 });
 
 gulp.task('watch', () => {
     gulp.watch(['src/sass/**/*.sass'], ['sass']);
-    gulp.watch(['src/js/**/*.js'], ['js']);
+    gulp.watch(['src/js/app.js'], ['js']);
 });
 
 gulp.task('default', ['watch']);
