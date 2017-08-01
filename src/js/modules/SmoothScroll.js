@@ -1,4 +1,4 @@
-class SmoothScroll {
+export class SmoothScroll {
     constructor (settings) {
         this.wrapper = $('.full-page');
         this.screenItem = $('section[id*="page-"]');
@@ -8,8 +8,16 @@ class SmoothScroll {
         this.currentPage = 0;
         this.pageCount = 0;
         this.lastAnimation = 0;
-
         this.setPosition('default');
+
+        this.init();
+    }
+
+    init () {
+        this.formatPage();
+        this.scrollInit();
+        this.arrowNavInit();
+        this.menuInit();
     }
 
     formatPage () {
@@ -89,7 +97,6 @@ class SmoothScroll {
 
     arrowNavInit () {
         $(document).bind('keypress', e => {
-            e.preventDefault();
             switch (e.keyCode) {
                 case 38:
                     if (this.currentPage !== 0) {

@@ -2,9 +2,11 @@
 
 let gulp       = require('gulp'),
     sass       = require('gulp-sass'),
-    babel      = require('gulp-babel'),
     concat     = require('gulp-concat'),
-    browserify = require('gulp-browserify');
+    browserify = require('browserify'),
+    babelify   = require('babelify'),
+    source     = require('vinyl-source-stream'),
+    vueify     = require('vueify');
 
 gulp.task('sass', () => {
     return gulp.src(['src/sass/app.sass'])
@@ -13,13 +15,11 @@ gulp.task('sass', () => {
         .pipe(gulp.dest('dist/css'))
 });
 
-gulp.task('js', () => {
-    return gulp.src(['src/js/**/*.js'])
-        .pipe(babel({
-            presets: [ 'es2015' ],
-            plugins: ['transform-es2015-modules-commonjs']
-        }))
-        .pipe(browserify())
+gulp.task('js', function () {
+    return browserify({entries: 'src/js/app.js'})
+        .transform(babelify, { presets: ['es2015'] })
+        .bundle()
+        .pipe(source('bundle.js'))
         .pipe(gulp.dest('dist/js'))
 });
 

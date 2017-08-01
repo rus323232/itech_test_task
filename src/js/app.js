@@ -1,20 +1,21 @@
 "use strict";
+import $ from 'jquery'
+import  { SmoothScroll }  from './modules/SmoothScroll';
+import  { Router } from './modules/Router';
 
-import  SmoothScroll from './SmoothScroll/index';
 
-let test =  new SmoothScroll({
+let scroll =  new SmoothScroll({
     animationDelay: 500,
     animationTime: 1000
 });
-
-test.formatPage();
-test.scrollInit();
-test.arrowNavInit();
-test.menuInit();
 
 $('.fixed-header__button').click( (event) => {
     $(event.currentTarget).toggleClass("on");
     return false;
 });
+
+
+
+
 
 
