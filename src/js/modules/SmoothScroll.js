@@ -2,22 +2,39 @@ export class SmoothScroll {
     constructor (settings) {
         this.wrapper = $('.full-page');
         this.screenItem = $('section[id*="page-"]');
-        this.animationTime = settings.animationTime || 200;
-        this.animationDelay = settings.animationDelay || 100;
+        this.animationTime = settings.animationTime || 1000;
+        this.animationDelay = settings.animationDelay || 500;
         this.pageHeight = 0;
         this.currentPage = 0;
         this.pageCount = 0;
         this.lastAnimation = 0;
-        this.setPosition('default');
+        this.pageList = this.getPageList();
 
         this.init();
     }
 
     init () {
+        this.setPosition('default');
         this.formatPage();
         this.scrollInit();
         this.arrowNavInit();
         this.menuInit();
+        this.pageChangeListen();
+    }
+
+    getPageList () {
+        let result = [];
+        this.screenItem.each((index, element) => {
+            let title, pathName;
+            title = $(element).attr('data-title');
+            pathName = $(element).attr('id');
+            result.push({
+                title: title,
+                pathName: pathName
+            });
+        });
+
+        return result;
     }
 
     formatPage () {
@@ -25,6 +42,13 @@ export class SmoothScroll {
             paginationCircle = $('.pagination li');
 
         if (!$('body').hasClass('formatted')) {
+            this.wrapper.css({
+                'transition': 'all '+this.animationTime+'ms ease 0s',
+                '-moz-transition': 'all '+this.animationTime+'ms ease 0s',
+                '-o-transition': 'all '+this.animationTime+'ms ease 0s',
+                '-ms-transition': 'all '+this.animationTime+'ms ease 0s',
+                '-webkit-transition': 'all '+this.animationTime+'ms ease 0s'
+            });
             this.screenItem.each( (index, element) => {
                 $(element).css('top', offsetY + "%");
                 offsetY += 100;
@@ -44,18 +68,39 @@ export class SmoothScroll {
             } else {
                 $('.fixed-header').removeClass('fixed-header_black');
             }
-            this.updateUrl(this.currentPage + 1);
+            this.updateUrl(this.currentPage);
         }
     }
 
     updateUrl (pageNumber) {
         let currentUrl = location.href.split('/'),
-            newUrl = currentUrl[0] + '#page-' +pageNumber;
-        window.history.pushState(null, null, newUrl);
-        $(window).bind('hashchange', () => {
+            newUrl, newTitle;
+
+        currentUrl.splice(-1);
+        currentUrl.join('/');
+
+        newTitle = this.pageList[pageNumber].title;
+        newUrl = '#' + this.pageList[pageNumber].pathName;
+
+        window.history.pushState(null, newTitle, newUrl)
+        document.title = newTitle;
+    }
+
+    pageChangeListen() {
+        $(window).bind('hashchange', (e) => {
+            e.preventDefault();
             let newPage = location.href.split('#')[1],
-                newPageNumber = parseInt(newPage.slice(-1));
-            this.goToPage(newPageNumber - 1);
+                newPageNumber, i, max;
+            max = this.pageList.length;
+
+            for (i = 0; i < max; i++) {
+                if (this.pageList[i].pathName === newPage) {
+                    this.setPosition('default');
+                    this.goToPage(i);
+                } else {
+                    this.goToPage(0);
+                }
+            }
         })
     }
 
@@ -80,7 +125,6 @@ export class SmoothScroll {
 
             this.lastAnimation = currentTime;
 
-            console.log(this.currentPage);
             if (delta < 0) {
                 if (this.currentPage === (this.pageCount - 1)) {
                     return;
@@ -152,7 +196,6 @@ export class SmoothScroll {
         let position;
         if (page === 'default') {
             $(window).scrollTop(0);
-            position = 0;
         }
         position = parseInt(page) * this.pageHeight * -1;
         if (position !== undefined) {

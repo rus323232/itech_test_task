@@ -31,11 +31,11 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-sass": "^3.1.0",
+    "gulp-server-livereload": "^1.9.2",
     "jquery": "^3.2.1",
-    "vinyl-source-stream": "^1.1.0",
-    "vueify": "^9.4.1"
+    "vinyl-source-stream": "^1.1.0"
   },
-  "browser":{
+  "browser": {
     "jquery": "./node_modules/jquery/dist/jquery.js"
   },
   "browserify-shim": {

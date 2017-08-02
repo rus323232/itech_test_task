@@ -6,7 +6,7 @@ let gulp       = require('gulp'),
     browserify = require('browserify'),
     babelify   = require('babelify'),
     source     = require('vinyl-source-stream'),
-    vueify     = require('vueify');
+    webserver  = require('gulp-server-livereload');
 
 gulp.task('sass', () => {
     return gulp.src(['src/sass/app.sass'])
@@ -23,9 +23,17 @@ gulp.task('js', function () {
         .pipe(gulp.dest('dist/js'))
 });
 
-gulp.task('watch', () => {
-    gulp.watch(['src/sass/**/*.sass'], ['sass']);
-    gulp.watch(['src/js/app.js'], ['js']);
+gulp.task('webserver', function() {
+    gulp.src('')
+        .pipe(webserver({
+            livereload: true,
+            open: true
+        }));
 });
 
-gulp.task('default', ['watch']);
+gulp.task('watch', () => {
+    gulp.watch(['src/sass/**/*.sass'], ['sass']);
+    gulp.watch(['src/js/**/*.js'], ['js']);
+});
+
+gulp.task('default', ['webserver','watch']);
