@@ -2,17 +2,30 @@
 import $ from 'jquery'
 import  { SmoothScroll }  from './modules/SmoothScroll';
 
-let scroll =  new SmoothScroll({
-    animationDelay: 500,
-    animationTime: 1000
-});
+let centerContent = () => {
+    let height;
 
-$('.fixed-header__button').click( (event) => {
-    $(event.currentTarget).toggleClass("on");
-    return false;
-});
+    height = $('*[class*="__content"]').height();
+    console.log(parseInt(height / 2));
+    $('*[class*="__content"]').css('margin-top', parseInt(height / 2) * -1);
+};
 
 $(document).ready(function(){
+    centerContent();
+
+    let scroll =  new SmoothScroll({
+        animationDelay: 500,
+        animationTime: 1000
+    });
+
+    $('.fixed-header__button').click( (event) => {
+        $(event.currentTarget).toggleClass('on');
+        if ($(window).width() < 771) {
+            $('.fixed-header__menu, .fixed-header').toggleClass('on');
+        }
+        return false;
+    });
+
     $('.page-2__slider.owl-carousel').owlCarousel({
         loop:true,
         margin:10,
@@ -20,7 +33,7 @@ $(document).ready(function(){
         responsive:{
             0:{
                 items:1,
-                nav:true
+                nav:false
             },
             600:{
                 items:2,
@@ -36,6 +49,11 @@ $(document).ready(function(){
                 loop:false
             }
         }
-    })
+    });
+
 });
+
+$(window).resize(centerContent);
+
+
 

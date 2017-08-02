@@ -17,6 +17,7 @@ export class SmoothScroll {
         this.setPosition('default');
         this.formatPage();
         this.scrollInit();
+        this.touchInit();
         this.arrowNavInit();
         this.menuInit();
         this.pageChangeListen();
@@ -80,14 +81,14 @@ export class SmoothScroll {
         currentUrl.join('/');
 
         newTitle = this.pageList[pageNumber].title;
-        newUrl = '#' + this.pageList[pageNumber].pathName;
+        newUrl = '#/' + this.pageList[pageNumber].pathName;
 
-        window.history.pushState(null, newTitle, newUrl)
+        window.history.pushState(null, newTitle, newUrl);
         document.title = newTitle;
     }
 
     pageChangeListen() {
-        $(window).bind('hashchange', (e) => {
+        $(window).on('hashchange', (e) => {
             e.preventDefault();
             let newPage = location.href.split('#')[1],
                 newPageNumber, i, max;
@@ -113,7 +114,7 @@ export class SmoothScroll {
     }
 
     scrollInit () {
-        $(document).bind('mousewheel DOMMouseScroll', event => {
+        $(document).on('mousewheel DOMMouseScroll', event => {
             event.preventDefault();
             let currentTime = new Date().getTime(),
                 delta = event.originalEvent.wheelDelta || -event.originalEvent.detail;
@@ -126,10 +127,9 @@ export class SmoothScroll {
             this.lastAnimation = currentTime;
 
             if (delta < 0) {
-                if (this.currentPage === (this.pageCount - 1)) {
-                    return;
+                if (this.currentPage < (this.pageCount - 1)) {
+                    this.goNextPage();
                 }
-                this.goNextPage();
             }
             else {
                 if (this.currentPage !== 0) {
@@ -139,8 +139,26 @@ export class SmoothScroll {
         });
     }
 
+    touchInit () {
+        let lastY;
+        $(window).on('touchmove', (e) => {
+            e.preventDefault();
+            let currentY = e.originalEvent.touches[0].clientY;
+            if(currentY > lastY){
+                if (this.currentPage !== 0) {
+                    this.goPrevPage();
+                }
+            }else if(currentY < lastY){
+                if (this.currentPage < (this.pageCount - 1)) {
+                    this.goNextPage();
+                }
+            }
+            lastY = currentY;
+        });
+    }
+
     arrowNavInit () {
-        $(document).bind('keypress', e => {
+        $(document).on('keypress', e => {
             switch (e.keyCode) {
                 case 38:
                     if (this.currentPage !== 0) {
@@ -157,7 +175,7 @@ export class SmoothScroll {
     }
 
     menuInit () {
-        $('.pagination a, .fixed-header__menu a').bind('click', event => {
+        $('.pagination a, .fixed-header__menu a').on('click', event => {
             event.preventDefault();
             let link = $(event.currentTarget).attr('href'),
                 page = parseInt(link.slice(-1)) - 1;
