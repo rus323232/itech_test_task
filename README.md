@@ -9,7 +9,7 @@
 
 В процессе разработки были задействованы
   - Библиотека [jQuery](https://jquery.com/)
-  - Плагин, реализующий слайдер, [owlCarousel-2](https://owlcarousel2.github.io/OwlCarousel2/)
+  - Плагин реализующий слайдер, [owlCarousel-2](https://owlcarousel2.github.io/OwlCarousel2/)
   - [Sass](http://sass-lang.com/)
   - [node.js](https://nodejs.org/), [gulp](https://gulpjs.com/), [browserify](http://browserify.org/), [babel](https://babeljs.io/) - для сборки проекта
 # Установка
