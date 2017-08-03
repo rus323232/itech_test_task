@@ -24,3 +24,7 @@ $ npm start
 
   - Модуль отвечающий за реализацию постраничной прокрутки страницы [SmoothScroll](https://github.com/rus323232/itech_test_task/blob/master/src/js/modules/SmoothScroll.js) 
   - События нажатия ссылок и кнопок, анимация, инициализация слайдера [PageTransform](https://github.com/rus323232/itech_test_task/blob/master/src/js/modules/PageTransform.js)
+
+# Примечание
+
+Адаптивность тестировал на IPhone 5s, Lenovo ideaPad, BQ Strike
