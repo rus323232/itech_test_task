@@ -93,6 +93,7 @@ export class SmoothScroll {
             let newPage = location.href.split('#')[1],
                 newPageNumber, i, max;
             max = this.pageList.length;
+
             for (i = 0; i < max; i++) {
                 if ('/' + this.pageList[i].pathName === newPage) {
                     this.setPosition('default');
@@ -148,7 +149,10 @@ export class SmoothScroll {
         $(window).on('touchmove', (e) => {
             e.preventDefault();
             let moveY = lastY-e.originalEvent.touches[0].pageY;
-            if (Math.abs(moveY) < 60) return false;
+
+            if (Math.abs(moveY) < 60) {
+                return false
+            }
             if(moveY < 0){
                 if (this.currentPage !== 0) {
                     this.goPrevPage();
@@ -167,14 +171,16 @@ export class SmoothScroll {
     }
 
     arrowNavInit () {
-        $(document).on('keypress', e => {
+        $(document).on('keypress', (e) => {
             switch (e.keyCode) {
                 case 38:
+                    e.preventDefault();
                     if (this.currentPage !== 0) {
                         this.goPrevPage();
                     }
                     break;
                 case 40:
+                    e.preventDefault();
                     if (this.currentPage < (this.pageCount - 1)) {
                         this.goNextPage();
                     }
@@ -184,11 +190,20 @@ export class SmoothScroll {
     }
 
     menuInit () {
-        $('.pagination a, .fixed-header__menu a').on('click', event => {
+        $('.pagination a, .fixed-header__menu a').on('click', (event) => {
             event.preventDefault();
             let link = $(event.currentTarget).attr('href'),
-                page = parseInt(link.slice(-1)) - 1;
-            this.goToPage(page);
+                page = link.split('#')[1],
+                i, max = this.pageList.length;
+
+            for (i = 0; i < max; i++) {
+                if ('/' + this.pageList[i].pathName === page) {
+                    this.setPosition('default');
+                    this.goToPage(i);
+                } else {
+                    this.goToPage(0);
+                }
+            }
         });
     }
 

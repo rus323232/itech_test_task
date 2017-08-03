@@ -1,5 +1,6 @@
 "use strict";
 import $ from 'jquery'
+import owlCarousel from 'owlCarousel';
 import { PageTransform } from './modules/PageTransform';
 import  { SmoothScroll }  from './modules/SmoothScroll';
 
@@ -11,3 +12,4 @@ $(document).ready(function(){
 
     let pageTransform = new PageTransform().init();
 });
+

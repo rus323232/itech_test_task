@@ -29,17 +29,22 @@
     "browserify": "^14.4.0",
     "browserify-shim": "^3.8.14",
     "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.7.0",
     "gulp-concat": "^2.6.1",
     "gulp-sass": "^3.1.0",
     "gulp-server-livereload": "^1.9.2",
+    "gulp-uglify": "^3.0.0",
     "jquery": "^3.2.1",
+    "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
   "browser": {
-    "jquery": "./node_modules/jquery/dist/jquery.js"
+    "jquery": "./node_modules/jquery/dist/jquery.js",
+    "owlCarousel": "./src/libs/owl-carousel2/owl.carousel.min.js"
   },
   "browserify-shim": {
-    "jquery": "$"
+    "jquery": "$",
+    "owlCarousel": "owlCarousel"
   },
   "browserify": {
     "transform": [
