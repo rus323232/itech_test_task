@@ -1,6 +1,17 @@
 $textColor: #ffffff
+$linkColor: #ffffff
+$hoverLinkColor: #ebb919
 $pagination-color: #ffc815
 $font: 'Roboto-Light'
+
+@mixin contentPosition ()
+  position: absolute
+  top: 50%
+  -webkit-transform: translateY(-50%)
+  -moz-transform: translateY(-50%)
+  -ms-transform: translateY(-50%)
+  -o-transform: translateY(-50%)
+  transform: translateY(-50%)
 
 body
   font-family: $font
@@ -8,6 +19,12 @@ body
   color: $textColor
   height: 100%
   overflow: hidden
+
+a
+  color: $linkColor
+
+a:hover
+  color: $hoverLinkColor
 
 .full-page
   margin: 0
@@ -31,7 +48,8 @@ body
 .container
   position: relative
   max-width: 1200px
+  width: 100%
   margin: 0 auto 0
-  padding: 0px 20px 0px 20px
+  padding: 0 20px 0 20px
   height: 100%
 

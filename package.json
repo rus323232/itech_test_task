@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "start": "gulp js && gulp sass && gulp"
   },
   "repository": {
     "type": "git",

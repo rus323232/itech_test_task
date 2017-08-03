@@ -9,8 +9,6 @@ export class SmoothScroll {
         this.pageCount = 0;
         this.lastAnimation = 0;
         this.pageList = this.getPageList();
-
-        this.init();
     }
 
     init () {
@@ -25,8 +23,10 @@ export class SmoothScroll {
 
     getPageList () {
         let result = [];
+
         this.screenItem.each((index, element) => {
             let title, pathName;
+
             title = $(element).attr('data-title');
             pathName = $(element).attr('id');
             result.push({
@@ -93,9 +93,8 @@ export class SmoothScroll {
             let newPage = location.href.split('#')[1],
                 newPageNumber, i, max;
             max = this.pageList.length;
-
             for (i = 0; i < max; i++) {
-                if (this.pageList[i].pathName === newPage) {
+                if ('/' + this.pageList[i].pathName === newPage) {
                     this.setPosition('default');
                     this.goToPage(i);
                 } else {
@@ -141,19 +140,29 @@ export class SmoothScroll {
 
     touchInit () {
         let lastY;
+
+        $(window).on('touchstart', (e) => {
+            lastY = e.originalEvent.touches[0].pageY;
+        });
+
         $(window).on('touchmove', (e) => {
             e.preventDefault();
-            let currentY = e.originalEvent.touches[0].clientY;
-            if(currentY > lastY){
+            let moveY = lastY-e.originalEvent.touches[0].pageY;
+            if (Math.abs(moveY) < 60) return false;
+            if(moveY < 0){
                 if (this.currentPage !== 0) {
                     this.goPrevPage();
                 }
-            }else if(currentY < lastY){
+            }else {
                 if (this.currentPage < (this.pageCount - 1)) {
                     this.goNextPage();
                 }
             }
-            lastY = currentY;
+        });
+
+        $(window).resize (() => {
+            this.formatPage();
+            this.goToPage(this.currentPage);
         });
     }
 
@@ -201,6 +210,7 @@ export class SmoothScroll {
 
     goToPage (pageNumber) {
         let page = parseInt(pageNumber);
+
         if (page > (this.pageCount - 1) && page < 0) {
             console.log('Page not exist');
             return;
@@ -212,6 +222,7 @@ export class SmoothScroll {
 
     setPosition (page) {
         let position;
+
         if (page === 'default') {
             $(window).scrollTop(0);
         }

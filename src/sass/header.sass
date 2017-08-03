@@ -42,8 +42,12 @@ $textColor: #ffffff
     border-radius: 2px
     z-index: 12
 
-.fixed-header__button.on
+.fixed-header__button:hover > span,
+.fixed-header__button:hover > span:after,
+.fixed-header__button:hover > span:before
+    background-color: $hoverLinkColor
 
+.fixed-header__button.on
   span
     background-color: transparent
 
@@ -73,7 +77,6 @@ $textColor: #ffffff
 
       a
         text-decoration: none
-        color: $textColor
         display: inline-block
 
 .pagination
