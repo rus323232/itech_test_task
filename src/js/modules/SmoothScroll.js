@@ -200,6 +200,7 @@ export class SmoothScroll {
                 if ('/' + this.pageList[i].pathName === page) {
                     this.setPosition('default');
                     this.goToPage(i);
+                    return;
                 } else {
                     this.goToPage(0);
                 }
