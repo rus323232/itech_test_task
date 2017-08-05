@@ -40,7 +40,8 @@ export class SmoothScroll {
 
     formatPage () {
         let offsetY = 0,
-            paginationCircle = $('.pagination li');
+            paginationCircle = $('.pagination li'),
+            menuItem = $('.fixed-header__menu a');
 
         if (!$('body').hasClass('formatted')) {
             this.wrapper.css({
@@ -60,8 +61,8 @@ export class SmoothScroll {
         this.calcPageParams();
 
         if (this.currentPage !== undefined) {
-            this.screenItem.removeClass('active');
-            this.screenItem.eq(this.currentPage).addClass('active');
+            menuItem.removeClass('active');
+            menuItem.eq(this.currentPage).addClass('active');
             paginationCircle.removeClass('active');
             paginationCircle.eq(this.currentPage).addClass('active');
             if (this.currentPage === 1 ) {
