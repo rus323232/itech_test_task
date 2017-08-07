@@ -245,6 +245,7 @@ export class SmoothScroll {
             $(window).scrollTop(0);
         }
         position = parseInt(page) * this.pageHeight * -1;
+
         if (position !== undefined) {
             this.wrapper.css({
                 '-webkit-transform': 'translate3d(0px, '+ position + 'px, 0px)',
